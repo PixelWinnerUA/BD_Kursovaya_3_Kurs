@@ -10,6 +10,7 @@ import {
 } from "../../utils/types/tables.types";
 import { Tables } from "../../constans/constans";
 import { InsertMutationProps } from "../../utils/hooks/useInsert.hook";
+import { UseDeleteByIdMutationProps } from "../../utils/hooks/useDeleteById";
 
 export const tablesApi = createApi({
     reducerPath: "tablesApi",
@@ -64,10 +65,17 @@ export const tablesApi = createApi({
             }),
             providesTags: [Tables.FORMATTED_NORMA]
         }),
-
         insertTable: builder.mutation<Tables | undefined, InsertMutationProps>({
             query: (body) => ({
-                url: `php/insertTable.php`,
+                url: "php/insertTable.php",
+                method: "POST",
+                body
+            }),
+            invalidatesTags: (result: any) => [{ type: result }]
+        }),
+        deleteById: builder.mutation<Tables | undefined, UseDeleteByIdMutationProps>({
+            query: (body) => ({
+                url: "php/deleteById.php",
                 method: "POST",
                 body
             }),
@@ -83,5 +91,6 @@ export const {
     useGetRawQuery,
     useGetPlanQuery,
     useGetFormattedNormaQuery,
-    useInsertTableMutation
+    useInsertTableMutation,
+    useDeleteByIdMutation
 } = tablesApi;

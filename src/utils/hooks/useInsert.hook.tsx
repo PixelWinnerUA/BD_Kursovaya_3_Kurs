@@ -14,14 +14,13 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import styled from "styled-components";
 import { useInsertTableMutation } from "../../store/api/TablesApi";
-import { useAppSelector } from "../../store/store";
 import { User } from "../types/user.types";
 
 type UseInsertProps = {
     tableType: Tables;
+    user: User;
 };
 
-//{ tableType, user: { ...user }, values: { ...values } }
 export type InsertMutationProps = {
     tableType: Tables;
     user: User;
@@ -36,10 +35,9 @@ const FieldsWrapper = styled(Box)`
     padding: 10px;
 `;
 
-export const useInsert = ({ tableType }: UseInsertProps) => {
+export const useInsert = ({ tableType, user }: UseInsertProps) => {
     const [open, setOpen] = useState(false);
     const [insertTable, { isLoading }] = useInsertTableMutation();
-    const user = useAppSelector((state) => state.userSlice.user);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -145,7 +143,6 @@ export const useInsert = ({ tableType }: UseInsertProps) => {
                         Назад
                     </Button>
                     <Button onClick={formik.submitForm} disabled={isLoading} variant="contained">
-                        {/* mutation*/}
                         Додати рядок
                     </Button>
                 </DialogActions>
@@ -155,6 +152,6 @@ export const useInsert = ({ tableType }: UseInsertProps) => {
 
     return {
         insertModal,
-        handleClickOpen
+        handleClickOpenInsert: handleClickOpen
     };
 };

@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { useAvatar } from "../utils/hooks/useAvatar";
 import { resetUser } from "../store/reducers/UserReducer";
 import { useInsert } from "../utils/hooks/useInsert.hook";
+import { useDeleteById } from "../utils/hooks/useDeleteById";
 
 const ContentPageBox = styled(Box)`
     width: 100%;
@@ -63,7 +64,8 @@ const ContentPage = () => {
     const user = useAppSelector((state) => state.userSlice.user);
     const dispatch = useAppDispatch();
     const { avatarProps } = useAvatar(user.userName);
-    const { handleClickOpen, insertModal } = useInsert({ tableType: table });
+    const { handleClickOpenInsert, insertModal } = useInsert({ tableType: table, user });
+    const { handleClickOpenDelete, deleteModal } = useDeleteById({ tableType: table, user });
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
@@ -113,13 +115,13 @@ const ContentPage = () => {
                     <MenuItem value={Tables.FASHION}>Таблиця: Fashion</MenuItem>
                 </Select>
                 <BtsContainer>
-                    <Button disabled={isViewOfTable} onClick={handleClickOpen} variant="contained">
+                    <Button disabled={isViewOfTable} onClick={handleClickOpenInsert} variant="contained">
                         Insert
                     </Button>
                     <Button disabled={isViewOfTable} variant="contained">
                         Update
                     </Button>
-                    <Button disabled={isViewOfTable} variant="contained">
+                    <Button disabled={isViewOfTable} onClick={handleClickOpenDelete} variant="contained">
                         Delete
                     </Button>
                 </BtsContainer>
@@ -154,6 +156,7 @@ const ContentPage = () => {
             </Header>
             <ContentPageContainer>{renderTable()}</ContentPageContainer>
             {insertModal()}
+            {deleteModal()}
         </ContentPageBox>
     );
 };
