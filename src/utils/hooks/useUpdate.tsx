@@ -1,23 +1,23 @@
-import { Tables } from "../../constans/constans";
-import { useState } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
-import * as yup from "yup";
-import { useFormik } from "formik";
-import { useInsertTableMutation } from "../../store/api/TablesApi";
-import { User } from "../types/user.types";
-import { getValidationSchema } from "../helpers/getValidationSchema";
 import { ModalsProps } from "../types/tables.types";
+import { useState } from "react";
+import { Tables } from "../../constans/constans";
+import * as yup from "yup";
+import { getValidationSchema } from "../helpers/getValidationSchema";
+import { useFormik } from "formik";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 import { FieldsWrapper } from "../../components/styled/FieldsWrapper";
+import { User } from "../types/user.types";
+import { useUpdateTableMutation } from "../../store/api/TablesApi";
 
-export type InsertMutationProps = {
+export type UpdateMutationProps = {
     tableType: Tables;
     user: User;
     values: object;
 };
 
-export const useInsert = ({ tableType, user }: ModalsProps) => {
+export const useUpdate = ({ tableType, user }: ModalsProps) => {
     const [open, setOpen] = useState(false);
-    const [insertTable, { isLoading }] = useInsertTableMutation();
+    const [updateTable, { isLoading }] = useUpdateTableMutation();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -27,27 +27,26 @@ export const useInsert = ({ tableType, user }: ModalsProps) => {
         setOpen(false);
     };
 
-    let columns = [] as string[];
+    let columns: string[] = [];
 
     switch (tableType) {
         case Tables.NORMA:
-            columns = ["ProductId", "FashionId", "RawId", "CountOfRaw"];
+            columns = ["Id", "ProductId", "FashionId", "RawId", "CountOfRaw"];
             break;
         case Tables.RAW:
-            columns = ["RawName", "Unit"];
+            columns = ["Id", "RawName", "Unit"];
             break;
         case Tables.PRODUCT:
-            columns = ["ProductName"];
+            columns = ["Id", "ProductName"];
             break;
         case Tables.PLAN:
-            columns = ["FashionId", "PlanCount"];
+            columns = ["Id", "FashionId", "PlanCount"];
             break;
         case Tables.FASHION:
-            columns = ["FashionId"];
+            columns = ["Id", "FashionId"];
             break;
     }
 
-    //Creating obj with empty values for a keys
     const values = columns.reduce((obj, key) => ({ ...obj, [key]: "" }), {});
 
     const schema = yup.object().shape(
@@ -59,10 +58,11 @@ export const useInsert = ({ tableType, user }: ModalsProps) => {
             {}
         )
     );
+
     const handleSubmit = (values: object) => {
-        const body = { tableType, user: { ...user }, values: { ...values } } as InsertMutationProps;
+        const body = { tableType, user: { ...user }, values: { ...values } } as UpdateMutationProps;
         handleClose();
-        insertTable(body);
+        updateTable(body);
     };
 
     const formik = useFormik({
@@ -71,12 +71,14 @@ export const useInsert = ({ tableType, user }: ModalsProps) => {
         onSubmit: (values) => handleSubmit(values)
     });
 
-    const insertModal = () => {
+    const updateModal = () => {
         return (
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Додавання рядку</DialogTitle>
+                <DialogTitle>Оновленнярядку</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>Заповніть усі поля, щоб додати нове значення до таблиці.</DialogContentText>
+                    <DialogContentText>
+                        Заповніть усі поля, щоб оновити певний рядок, введіть його Id.
+                    </DialogContentText>
                     <FieldsWrapper>
                         {columns.map((column) => {
                             return (
@@ -102,7 +104,7 @@ export const useInsert = ({ tableType, user }: ModalsProps) => {
                         Назад
                     </Button>
                     <Button onClick={formik.submitForm} disabled={isLoading} variant="contained">
-                        Додати рядок
+                        Оновити рядок
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -110,7 +112,7 @@ export const useInsert = ({ tableType, user }: ModalsProps) => {
     };
 
     return {
-        insertModal,
-        handleClickOpenInsert: handleClickOpen
+        updateModal,
+        handleClickOpenUpdate: handleClickOpen
     };
 };

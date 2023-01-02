@@ -1,5 +1,4 @@
 <?php
-
 $post = file_get_contents('php://input');
 $user = json_decode($post)->user;
 $values = json_decode($post)->values;
@@ -10,7 +9,7 @@ $password = $user->password;
 try {
     $dbConnection = mysqli_connect("localhost", "$username", "$password", "maindatabase");
 
-    echo json_encode(insertInDataTable($values, $tableType, $dbConnection));
+    echo json_encode(updateDataTable($values, $tableType, $dbConnection));
 
     $dbConnection->close();
 } catch (Exception $e) {
@@ -19,27 +18,27 @@ try {
 }
 
 
-function insertInDataTable($values, $tableType, $dbConnection): string
+function updateDataTable($values, $tableType, $dbConnection): string
 {
     switch ($tableType) {
         case("NormaTable"):
-            $sql = "INSERT INTO Norma (ProductId, FashionId, RawId, CountOfRaw) VALUES (('{$values->ProductId}'), ('{$values->FashionId}'), ('{$values->RawId}'), ('{$values->CountOfRaw}'))";
+            $sql = "UPDATE Norma SET ProductId = ('{$values->ProductId}'), FashionId = ('{$values->FashionId}'), RawId = ('{$values->RawId}'), CountOfRaw = ('{$values->CountOfRaw}') WHERE Id = ('{$values->Id}')";
             $dbConnection->query($sql);
             break;
         case ("RawTable"):
-            $sql = "INSERT INTO Raw (RawName, Unit) VALUES (('{$values->RawName}'), ('{$values->Unit}'))";
+            $sql = "UPDATE Raw SET RawName = ('{$values->RawName}'), Unit = ('{$values->Unit}') WHERE Id = ('{$values->Id}')";
             $dbConnection->query($sql);
             break;
         case("ProductTable"):
-            $sql = "INSERT INTO product (ProductName) VALUES (('{$values->ProductName}'))";
+            $sql = "UPDATE Product SET ProductName = ('{$values->ProductName}') WHERE Id = ('{$values->Id}')";
             $dbConnection->query($sql);
             break;
         case("FashionTable"):
-            $sql = "INSERT INTO Fashion (Id) VALUES (('{$values->FashionId}'))";
+            $sql = "UPDATE Fashion SET Id = ('{$values->FashionId}') WHERE Id = ('{$values->Id}')";
             $dbConnection->query($sql);
             break;
         case("PlanTable"):
-            $sql = "INSERT INTO Plan (FashionId, PlanCount) VALUES (('{$values->FashionId}'), ('{$values->PlanCount}'))";
+            $sql = "UPDATE Plan SET FashionId = ('{$values->FashionId}'), PlanCount = ('{$values->PlanCount}') WHERE Id = ('{$values->Id}')";
             $dbConnection->query($sql);
             break;
     }

@@ -11,6 +11,7 @@ import {
 import { Tables } from "../../constans/constans";
 import { InsertMutationProps } from "../../utils/hooks/useInsert.hook";
 import { UseDeleteByIdMutationProps } from "../../utils/hooks/useDeleteById";
+import { UpdateMutationProps } from "../../utils/hooks/useUpdate";
 
 export const tablesApi = createApi({
     reducerPath: "tablesApi",
@@ -65,9 +66,18 @@ export const tablesApi = createApi({
             }),
             providesTags: [Tables.FORMATTED_NORMA]
         }),
+
         insertTable: builder.mutation<Tables | undefined, InsertMutationProps>({
             query: (body) => ({
                 url: "php/insertTable.php",
+                method: "POST",
+                body
+            }),
+            invalidatesTags: (result: any) => [{ type: result }]
+        }),
+        updateTable: builder.mutation<Tables | undefined, UpdateMutationProps>({
+            query: (body) => ({
+                url: "php/updateTable.php",
                 method: "POST",
                 body
             }),
@@ -80,6 +90,15 @@ export const tablesApi = createApi({
                 body
             }),
             invalidatesTags: (result: any) => [{ type: result }]
+        }),
+
+        getProductList: builder.query<string | undefined, User>({
+            query: (body) => ({
+                url: "php/getProductList.php",
+                method: "POST",
+                body
+            }),
+            providesTags: [Tables.PRODUCT]
         })
     })
 });
@@ -92,5 +111,7 @@ export const {
     useGetPlanQuery,
     useGetFormattedNormaQuery,
     useInsertTableMutation,
-    useDeleteByIdMutation
+    useDeleteByIdMutation,
+    useUpdateTableMutation,
+    useGetProductListQuery
 } = tablesApi;

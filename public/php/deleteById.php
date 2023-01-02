@@ -12,6 +12,7 @@ try {
 
     echo json_encode(deleteById($Id, $tableType, $dbConnection));
 
+    $dbConnection->close();
 } catch (Exception $e) {
     header('HTTP/1.1 500 Internal Server Error');
     die(json_encode(array('message' => "Error: " . $e->getMessage(), "status" => 500)));

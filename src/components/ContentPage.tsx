@@ -20,10 +20,12 @@ import ProductTable from "./tables/productTable";
 import PlanTable from "./tables/planTable";
 import FormattedNormaTable from "./tables/formattedNormaTable";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { useAvatar } from "../utils/hooks/useAvatar";
+import { useAvatarHook } from "../utils/hooks/useAvatar.hook";
 import { resetUser } from "../store/reducers/UserReducer";
 import { useInsert } from "../utils/hooks/useInsert.hook";
 import { useDeleteById } from "../utils/hooks/useDeleteById";
+import { useUpdate } from "../utils/hooks/useUpdate";
+import { useProductList } from "../utils/hooks/useProductList";
 
 const ContentPageBox = styled(Box)`
     width: 100%;
@@ -63,9 +65,11 @@ const ContentPage = () => {
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
     const user = useAppSelector((state) => state.userSlice.user);
     const dispatch = useAppDispatch();
-    const { avatarProps } = useAvatar(user.userName);
+    const { avatarProps } = useAvatarHook(user.userName);
     const { handleClickOpenInsert, insertModal } = useInsert({ tableType: table, user });
     const { handleClickOpenDelete, deleteModal } = useDeleteById({ tableType: table, user });
+    const { handleClickOpenUpdate, updateModal } = useUpdate({ tableType: table, user });
+    const { handleClickOpenProductList, productListModal } = useProductList(user);
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
@@ -116,13 +120,16 @@ const ContentPage = () => {
                 </Select>
                 <BtsContainer>
                     <Button disabled={isViewOfTable} onClick={handleClickOpenInsert} variant="contained">
-                        Insert
+                        Додати
                     </Button>
-                    <Button disabled={isViewOfTable} variant="contained">
-                        Update
+                    <Button disabled={isViewOfTable} onClick={handleClickOpenUpdate} variant="contained">
+                        Оновити
                     </Button>
                     <Button disabled={isViewOfTable} onClick={handleClickOpenDelete} variant="contained">
-                        Delete
+                        Видалити
+                    </Button>
+                    <Button onClick={handleClickOpenProductList} variant="contained">
+                        Список продуктів
                     </Button>
                 </BtsContainer>
                 <Tooltip title={`Користувач: ${user.userName}`}>
@@ -156,7 +163,9 @@ const ContentPage = () => {
             </Header>
             <ContentPageContainer>{renderTable()}</ContentPageContainer>
             {insertModal()}
+            {updateModal()}
             {deleteModal()}
+            {productListModal()}
         </ContentPageBox>
     );
 };

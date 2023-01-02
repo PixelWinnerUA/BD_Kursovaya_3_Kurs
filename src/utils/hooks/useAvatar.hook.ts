@@ -1,4 +1,4 @@
-export const useAvatar = (userName: string) => {
+export const useAvatarHook = (userName: string) => {
     const stringToColor = (string: string) => {
         let hash = 0;
         let i;

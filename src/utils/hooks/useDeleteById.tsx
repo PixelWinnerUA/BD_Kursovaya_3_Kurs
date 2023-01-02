@@ -3,23 +3,10 @@ import { User } from "../types/user.types";
 import { useState } from "react";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    TextField
-} from "@mui/material";
-import styled from "styled-components";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 import { useDeleteByIdMutation } from "../../store/api/TablesApi";
-
-type UseDeleteByIdProps = {
-    tableType: Tables;
-    user: User;
-};
+import { ModalsProps } from "../types/tables.types";
+import { FieldsWrapper } from "../../components/styled/FieldsWrapper";
 
 export type UseDeleteByIdMutationProps = {
     tableType: Tables;
@@ -27,14 +14,7 @@ export type UseDeleteByIdMutationProps = {
     Id: string;
 };
 
-const FieldWrapper = styled(Box)`
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    padding: 10px;
-`;
-
-export const useDeleteById = ({ tableType, user }: UseDeleteByIdProps) => {
+export const useDeleteById = ({ tableType, user }: ModalsProps) => {
     const [open, setOpen] = useState(false);
     const [deleteById, { isLoading }] = useDeleteByIdMutation();
 
@@ -52,7 +32,6 @@ export const useDeleteById = ({ tableType, user }: UseDeleteByIdProps) => {
         const body = { tableType, user: { ...user }, Id } as UseDeleteByIdMutationProps;
         handleClose();
         deleteById(body);
-        console.log(body);
     };
 
     const formik = useFormik({
@@ -67,7 +46,7 @@ export const useDeleteById = ({ tableType, user }: UseDeleteByIdProps) => {
                 <DialogTitle>Видалення рядку за Id</DialogTitle>
                 <DialogContent>
                     <DialogContentText>Введіть Id рядку, який потрібно видалити.</DialogContentText>
-                    <FieldWrapper>
+                    <FieldsWrapper>
                         <TextField
                             id="Id"
                             label="Id"
@@ -77,7 +56,7 @@ export const useDeleteById = ({ tableType, user }: UseDeleteByIdProps) => {
                             error={formik.touched.Id && Boolean(formik.errors.Id)}
                             helperText={formik.touched.Id && formik.errors.Id}
                         />
-                    </FieldWrapper>
+                    </FieldsWrapper>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} variant="outlined">

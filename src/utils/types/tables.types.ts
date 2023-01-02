@@ -1,3 +1,6 @@
+import { Tables } from "../../constans/constans";
+import { User } from "./user.types";
+
 export interface NormaTable {
     Id: number;
     ProductId: number;
@@ -35,3 +38,8 @@ export interface FormattedNormaTable {
     CountOfRaw: number;
     Unit: string;
 }
+
+export type ModalsProps = {
+    tableType: Tables;
+    user: User;
+};
