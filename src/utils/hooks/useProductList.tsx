@@ -1,14 +1,5 @@
 import { useState } from "react";
-import {
-    Button,
-    CircularProgress,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Typography
-} from "@mui/material";
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import { useGetProductListQuery } from "../../store/api/TablesApi";
 import { User } from "../types/user.types";
 import ErrorAlert from "../../components/ErrorAlert";
