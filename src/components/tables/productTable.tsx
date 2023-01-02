@@ -16,7 +16,7 @@ const ProductTable = () => {
         {
             field: "ProductName",
             headerName: "Product Name",
-            width: 120
+            width: 240
         }
     ];
 
