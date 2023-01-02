@@ -74,7 +74,7 @@ export const useUpdate = ({ tableType, user }: ModalsProps) => {
     const updateModal = () => {
         return (
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Оновленнярядку</DialogTitle>
+                <DialogTitle>Оновлення рядку</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Заповніть усі поля, щоб оновити певний рядок, введіть його Id.
