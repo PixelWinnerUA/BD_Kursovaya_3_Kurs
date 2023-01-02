@@ -39,8 +39,8 @@ const AuthFrom = () => {
 
     const formik = useFormik({
         initialValues: {
-            userName: "root",
-            password: "0903"
+            userName: "",
+            password: ""
         } as User,
         validationSchema: schema,
         onSubmit: (values) => {
